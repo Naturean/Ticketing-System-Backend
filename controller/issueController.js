@@ -218,12 +218,20 @@ export const updateIssue = catchErrorAsync(async (req, res, next) => {
 
   try {
     issue = await Issue.findOne({ where: { id: id } });
+    if (!issue) {
+      return next(new AppError(`Issue ${id} is not existed!`, 404));
+    }
   } catch (error) {
     return next(new AppError(error.name, 500));
   }
 
-  if (!issue) {
-    return next(new AppError(`Issue ${id} is not existed!`, 404));
+  try {
+    const staff = await Staff.findOne({ where: { id: staffId } });
+    if (!staff) {
+      return next(new AppError(`Staff ${staffId} is not existed!`, 404));
+    }
+  } catch (error) {
+    return next(new AppError(error.name, 500));
   }
 
   const { state: issueState, staffId: issueStaffId } = issue.dataValues;
