@@ -32,6 +32,10 @@ const Issue = sequelize.define(
       values: ["wait", "fixing", "complete"],
       allowNull: false,
     },
+    reply: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     fixedDate: {
       type: DataTypes.DATE,
       allowNull: true,

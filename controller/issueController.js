@@ -205,7 +205,7 @@ export const getIssue = catchErrorAsync(async (req, res, next) => {
 });
 
 export const updateIssue = catchErrorAsync(async (req, res, next) => {
-  const { id, staffId, adminId = 0 } = req.body;
+  const { id, staffId, adminId = 0, reply } = req.body;
 
   const createDate = convertTimestampToDateTime(req.questTime);
   logger.info(`[${createDate}] Updating issue${id ? " with id " + id : ""}...`);
@@ -279,6 +279,10 @@ export const updateIssue = catchErrorAsync(async (req, res, next) => {
     });
   }
 
+  if (!reply) {
+    return next(new AppError("Missing reply when complete issue", 400));
+  }
+
   if (issueState !== "fixing" || issueStaffId !== Number(staffId)) {
     const message =
       issueState !== "fixing"
@@ -292,7 +296,7 @@ export const updateIssue = catchErrorAsync(async (req, res, next) => {
   let updatedData = null;
   try {
     updatedData = await Issue.update(
-      { state: "complete", fixedDate: fixedDate },
+      { state: "complete", fixedDate: fixedDate, reply: reply },
       { where: { id: id } }
     );
   } catch (error) {

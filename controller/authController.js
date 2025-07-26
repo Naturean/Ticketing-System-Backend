@@ -4,10 +4,8 @@ import logger from "../utils/logger.js";
 import Staff from "../model/staff.js";
 
 export const login = catchErrorAsync(async (req, res, next) => {
-  console.log(req.body);
   const { accountName, password } = req.body;
 
-  // TODO: Encapsulate logger function
   const createDate = convertTimestampToDateTime(req.questTime);
   logger.info(
     `[${createDate}] Trying to login. Account Name: ${

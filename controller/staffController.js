@@ -4,6 +4,7 @@ import { localAvatarUrl } from "../utils/envUtil.js";
 
 import Staff from "../model/staff.js";
 import logger from "../utils/logger.js";
+import { Op } from "sequelize";
 
 export const createStaff = catchErrorAsync(async (req, res, next) => {
   const createDate = convertTimestampToDateTime(req.questTime);
@@ -142,11 +143,39 @@ export const updateStaff = catchErrorAsync(async (req, res, next) => {
 
     const updateFields = {};
 
-    if (accountName && accountName !== "") {
+    let oldData = null;
+    try {
+      oldData = await Staff.findOne({ where: { id: id } });
+      if (!oldData) {
+        return next(new AppError(`No matched staff: id ${id}`, 404));
+      }
+    } catch (error) {
+      return next(new AppError(error.name, 500));
+    }
+
+    if (
+      accountName &&
+      accountName !== "" &&
+      oldData.dataValues.accountName !== accountName
+    ) {
+      try {
+        const sameNameData = await Staff.findOne({
+          where: {
+            accountName,
+            [Op.not]: { id: id },
+          },
+        });
+        if (sameNameData) {
+          return next(new AppError("Account name has been occupied", 406));
+        }
+      } catch (error) {
+        return next(new AppError(error.name, 500));
+      }
+
       updateFields.accountName = accountName;
     }
 
-    if (password && password !== "") {
+    if (password && password !== "" && oldData.password !== password) {
       updateFields.password = password;
     }
 
