@@ -1,10 +1,12 @@
 import { convertTimestampToDateTime } from "../utils/dateUtil.js";
 import { AppError, catchErrorAsync } from "../utils/errorUtil.js";
-import { localAvatarUrl } from "../utils/envUtil.js";
+import { getEnvironmentVariable } from "../utils/envUtil.js";
 
 import Staff from "../model/staff.js";
 import logger from "../utils/logger.js";
 import { Op } from "sequelize";
+
+const { publicAvatarUrl } = getEnvironmentVariable();
 
 export const createStaff = catchErrorAsync(async (req, res, next) => {
   const createDate = convertTimestampToDateTime(req.questTime);
@@ -23,7 +25,7 @@ export const createStaff = catchErrorAsync(async (req, res, next) => {
       staffRole: "staff",
       accountName,
       password,
-      avatarUrl: `${localAvatarUrl}/default_avatar.png`,
+      avatarUrl: `${publicAvatarUrl}/default_avatar.png`,
     });
   } catch (error) {
     return next(new AppError(error.name, 500));
@@ -138,7 +140,7 @@ export const updateStaff = catchErrorAsync(async (req, res, next) => {
     let avatarUrl = null;
     if (req.files.length > 0) {
       const extName = req.files[0].originalname.split(".").at(-1);
-      avatarUrl = `${localAvatarUrl}/${req.questTime}-${id}.${extName}`;
+      avatarUrl = `${publicAvatarUrl}/${req.questTime}-${id}.${extName}`;
     }
 
     const updateFields = {};

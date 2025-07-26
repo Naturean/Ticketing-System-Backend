@@ -2,9 +2,12 @@ import Issue from "../model/issue.js";
 import Staff from "../model/staff.js";
 
 import { convertTimestampToDateTime } from "../utils/dateUtil.js";
+import { getEnvironmentVariable } from "../utils/envUtil.js";
 import { catchErrorAsync, AppError } from "../utils/errorUtil.js";
-import { localImgUrl } from "../utils/envUtil.js";
+
 import logger from "../utils/logger.js";
+
+const { publicImgUrl } = getEnvironmentVariable();
 
 export const createIssue = catchErrorAsync(async (req, res, next) => {
   const createDate = convertTimestampToDateTime(req.questTime);
@@ -28,7 +31,7 @@ export const createIssue = catchErrorAsync(async (req, res, next) => {
       image = [];
       req.files.forEach((file) => {
         const originalname = file.originalname;
-        const curFilename = `${localImgUrl}/${req.questTime}-${originalname}`;
+        const curFilename = `${publicImgUrl}/${req.questTime}-${originalname}`;
 
         image.push(curFilename);
       });

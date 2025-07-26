@@ -1,6 +1,8 @@
 import { convertTimestampToDateTime } from "../utils/dateUtil.js";
-import { environment } from "../utils/envUtil.js";
+import { getEnvironmentVariable } from "../utils/envUtil.js";
 import logger from "../utils/logger.js";
+
+const { environment } = getEnvironmentVariable();
 
 const sendProductionError = (err, res) => {
   if (err.message === "SequelizeDatabaseError") {
@@ -27,9 +29,7 @@ const sendProductionError = (err, res) => {
 
 export const globalErrorHandler = (err, req, res, _next) => {
   const createDate = convertTimestampToDateTime(req.questTime);
-  logger.error(
-    `[${createDate}] Error in global error handler: ${err.message}`
-  );
+  logger.error(`[${createDate}] Error in global error handler: ${err.message}`);
 
   if (environment === "production") {
     return sendProductionError(err, res);

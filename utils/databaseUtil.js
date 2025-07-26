@@ -1,5 +1,7 @@
 import { Sequelize } from "sequelize";
-import { database, username, password, host } from "./envUtil.js";
+import { getEnvironmentVariable } from "./envUtil.js";
+
+const { database, username, password, host } = getEnvironmentVariable();
 
 const sequelize = new Sequelize(database, username, password, {
   host: host,
