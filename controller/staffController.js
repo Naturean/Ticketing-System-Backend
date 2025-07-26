@@ -35,7 +35,7 @@ export const createStaff = catchErrorAsync(async (req, res, next) => {
     `[${convertTimestampToDateTime(Date.now())}] Created staff successfully!`
   );
 
-  return res.status(200).json({
+  return res.status(201).json({
     status: "success",
     data: result,
   });
@@ -206,7 +206,7 @@ export const updateStaff = catchErrorAsync(async (req, res, next) => {
     )}] Updated staff ${id} successfully!`
   );
 
-  return res.status(200).json({
+  return res.status(201).json({
     status: "success",
     data: updatedData,
   });

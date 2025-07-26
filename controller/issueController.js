@@ -54,7 +54,7 @@ export const createIssue = catchErrorAsync(async (req, res, next) => {
     `[${convertTimestampToDateTime(Date.now())}] Created issue successfully!`
   );
 
-  return res.status(200).json({
+  return res.status(201).json({
     status: "success",
     data: result,
   });
@@ -284,7 +284,7 @@ export const updateIssue = catchErrorAsync(async (req, res, next) => {
       )}] Updated issue ${id} successfully! Current status: fixing.`
     );
 
-    return res.status(200).json({
+    return res.status(201).json({
       status: "success",
       data: updatedData,
     });
@@ -324,7 +324,7 @@ export const updateIssue = catchErrorAsync(async (req, res, next) => {
     )}] Updated issue ${id} successfully! Current status: complete.`
   );
 
-  return res.status(200).json({
+  return res.status(201).json({
     status: "success",
     data: updatedData,
   });
